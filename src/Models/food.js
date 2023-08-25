@@ -19,7 +19,7 @@ export default class food extends Model {
       allowNull: false
     },
     image: {
-      type: DataTypes.STRING(150),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     descb: {

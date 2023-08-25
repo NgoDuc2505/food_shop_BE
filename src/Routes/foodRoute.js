@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllFoodHandler, getFoodDetailHandler, uploadFoodIMgHanler } from '../Controllers/foodController.js'
+import { getAllFoodHandler, getFoodDetailHandler, uploadFoodIMgHanler, getFoodListlHandler } from '../Controllers/foodController.js'
 //multer
 import multer from "multer"
 const storage = multer.diskStorage({
@@ -18,6 +18,6 @@ foodRoute.get('/getFoodDetail/:idFood', getFoodDetailHandler)
 foodRoute.get('/getAllFood', getAllFoodHandler)
 
 foodRoute.post('/uploadFood/:foodId',upload.single("file") ,uploadFoodIMgHanler)
-
+foodRoute.get('/getListFoodByPage/:pageSize/:pageIndex', getFoodListlHandler)
 
 export default foodRoute

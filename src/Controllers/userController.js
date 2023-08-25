@@ -1,8 +1,8 @@
 import initModels from '../Models/init-models.js'
 import sequelize from '../Models/index.js'
 import { Op } from 'sequelize'
-
-
+import bcrypt from 'bcrypt'
+import { generateJWT } from '../Config/jwtConfig.js'
 const modal = initModels(sequelize)
 
 
@@ -46,7 +46,7 @@ const deleteUserHandler = async (req, res) => {
 }
 
 const createUserHandler = async (req, res) => {
-    const { full_name, email, password } = req.body
+    let { full_name, email, password } = req.body
     try {
         const data = await modal.users.findAll({
             where: {
@@ -54,6 +54,7 @@ const createUserHandler = async (req, res) => {
             }
         })
         if (data.length === 0) {
+            password = bcrypt.hashSync(password,10)
             const createData = await modal.users.create(
                 { full_name, email, password },
                 { fields: ["full_name", "email", "password"] }
@@ -69,7 +70,7 @@ const createUserHandler = async (req, res) => {
             res.send("Trung email roi!!")
         }
     } catch (error) {
-        res.send(`BE Error 500 : ${error.errors[0].message ? error.errors[0].message : ''}`)
+        res.send(`BE Error 500`)
     }
 }
 
@@ -145,4 +146,68 @@ const getUserByName = async (req, res) => {
     }
 }
 
-export { getUserHandler, getUserByIdHandler, deleteUserHandler, createUserHandler, updateUserHandler, getUserByName }
+const facebookLoginHandler = async (req,res)=>{
+    try{
+        const {uID} = req.params
+        const currentUser = await modal.users.findOne({
+            where:{
+                facebook_app_id: uID
+            }
+        })
+        if(currentUser){
+            res.status(200).send("token")
+        }else{
+            const newData = {
+                facebook_app_id: uID,
+                full_name: "",
+                email: "",
+                password: ""
+            }
+            const {facebook_app_id,full_name,email,password} = newData
+            const createdFB = await modal.users.create(
+                {full_name,email,password,facebook_app_id},
+                { fields: ["full_name", "email", "password","facebook_app_id"] }
+            )
+            res.status(200).send(createdFB)
+        }
+    }catch{
+        res.status(500).send("BE Error 500")
+    }
+}
+
+const loginHandler = async (req,res) =>{
+    try{
+        let { email, password } = req.body;
+        const checkEmail = await modal.users.findOne({
+            where: {
+                email,
+            }
+        })
+        if(checkEmail){
+            const checkPassword = bcrypt.compareSync(password,checkEmail.password)
+            if(checkPassword){
+                const payload = {
+                    email: checkEmail.email,
+                    role: "USER"
+                }
+                const token = generateJWT(payload)
+                res.status(200).json({
+                    success:true,
+                    data:{
+                        token,
+                        role: [],
+                    },
+                    msg: "Login successfully"
+                })
+            }else{
+                res.status(400).send("Wrong password")
+            }
+        }else{
+            res.status(400).send("Wrong email")
+        }
+    }catch{
+        res.status(500).send("BE Error 500")
+    }
+}
+
+export { getUserHandler, getUserByIdHandler, deleteUserHandler, createUserHandler, updateUserHandler, getUserByName, facebookLoginHandler, loginHandler }

@@ -1,5 +1,7 @@
 import initModels from "../Models/init-models.js"
 import sequelize from "../Models/index.js"
+import { serverError, rejected, success } from '../Config/responseConfig.js'
+
 
 const modal = initModels(sequelize)
 
@@ -8,22 +10,13 @@ const generateDateFormat = () => {
     return new Date(dateRecord).toISOString().replace("T", " ").substring(0, 19);
 }
 
-const handleFindUser = async (table,compareValue) =>{
-    const result = await table.findAll({
-        where: {
-            user_id : compareValue
+export const checkUser = async (id)=>{
+    const isUserExit = await modal.users.findAll({
+        where:{
+            user_id: id
         }
     })
-    return result
-}
-
-const handleFindRes = async (table,compareValue) =>{
-    const result = await table.findAll({
-        where: {
-            res_id : compareValue
-        }
-    })
-    return result
+    return isUserExit
 }
 
 const setLikeHandler = async (req, res) => {
@@ -37,9 +30,10 @@ const setLikeHandler = async (req, res) => {
         })
         if (results.length == 0) {
             await modal.like_res.create(
-                { res_id: resID, user_id: userID, date_like: generateDateFormat() }, 
-                { fields: ['res_id', 'user_id', 'date_like'] 
-            })
+                { res_id: resID, user_id: userID, date_like: generateDateFormat() },
+                {
+                    fields: ['res_id', 'user_id', 'date_like']
+                })
             res.status(200).json({
                 success: true,
                 data: { userID, resID },
@@ -53,7 +47,7 @@ const setLikeHandler = async (req, res) => {
             })
         }
     } catch {
-        res.status(500).send("BE ERROR 500")
+        serverError(res)
     }
 }
 
@@ -66,41 +60,47 @@ const unLikeHandler = async (req, res) => {
                 user_id: userID
             }
         })
-        res.status(200).json({
-            success: true,
-            data: { userID, resID },
-            msg: "Success unlike restaurant!"
-        })
+        success(res, "Success unlike restaurant!", { userID, resID })
     } catch {
-        res.status(500).send("BE ERROR 500")
+        serverError(res)
     }
 }
 
 const getLikeByResHandler = async (req, res) => {
     try {
         const { resID } = req.params
-        const currentRes = await handleFindRes(modal.like_res, resID)
-        res.status(200).json({
-            success: true,
-            data: currentRes,
-            msg: `success get list like by restaurant has id:${resID}`
+        const currentRes = await modal.like_res.findAll({
+            where: {
+                res_id: resID
+            },
+            include: [{ model: modal.users, as: "user", attributes: { exclude: ['deletedAt', 'facebook_app_id', 'password'] }, required: true }],
+            attributes: { exclude: ['user_id'] },
         })
+        success(res, `success get list like by restaurant has id:${resID}`, currentRes)
     } catch {
-        res.status(500).send("BE ERROR 500")
+        serverError(res)
     }
 }
 
 const getLikeByUserHandler = async (req, res) => {
     try {
         const { userID } = req.params
-        const currentUserLikedRes = await handleFindUser(modal.like_res, userID)
-        res.status(200).json({
-            success: true,
-            data: currentUserLikedRes,
-            msg: `success get list by user who owned id:${userID} `
-        })
+        let isUserExit
+        await checkUser(userID).then((rs)=>{isUserExit = rs}) 
+        if(isUserExit.length > 0){
+            const currentUserLikedRes = await modal.like_res.findAll({
+                where: {
+                    user_id: userID
+                },
+                include: [{ model: modal.restaurants, as: "re"}],
+                attributes: { exclude: ['res_id'] }
+            })
+            success(res, `success get list by user who owned id:${userID} `, currentUserLikedRes)
+        }else{
+            rejected(res,400,"User is not exits",[])
+        }
     } catch {
-        res.status(500).send("BE ERROR 500")
+        serverError(res)
     }
 }
 
@@ -126,48 +126,50 @@ const setRateResHandler = async (req, res) => {
                     fields: ['res_id', 'user_id', 'amount', 'date_rate']
                 }
             )
-            res.status(200).json({
-                success: true,
-                data: { userID, resID },
-                msg: `success rate res `
-            })
+            success(res, `success rate res `, { userID, resID })
         } else {
-            res.status(400).json({
-                success: false,
-                data: { userID, resID },
-                msg: "User rated this restaurant before"
-            })
+            rejected(res, 400, "User rated this restaurant before", { userID, resID })
         }
     } catch {
-        res.status(500).send("BE ERROR 500")
+        serverError(res)
     }
 }
 
 const getRateByResHandler = async (req, res) => {
     try {
         const { resID } = req.params
-        const currentRes = await handleFindRes(modal.rate_res, resID)
-        res.status(200).json({
-            success: true,
-            data: currentRes,
-            msg: `success get list rate by restaurant has id:${resID}`
+        const currentRes = await modal.rate_res.findAll({
+            where: {
+                res_id: resID
+            },
+            include: [{ model: modal.users, as: "user", attributes: { exclude: ['deletedAt', 'facebook_app_id', 'password'] }, required: true }],
+            attributes: { exclude: ['user_id'] }
         })
+        success(res, `success get list rate by restaurant has id:${resID}`, currentRes)
     } catch {
-        res.status(500).send("BE ERROR 500")
+        serverError(res)
     }
 }
 
 const getRateByUserHandler = async (req, res) => {
     try {
         const { userID } = req.params
-        const currentUserLikedRes = await handleFindUser(modal.rate_res, userID)
-        res.status(200).json({
-            success: true,
-            data: currentUserLikedRes,
-            msg: `success get rate by user who owned id:${userID} `
-        })
+        let isUserExits
+        await checkUser(userID).then((rs)=>{isUserExits = rs})
+        if(isUserExits.length > 0){
+            const currentUserLikedRes = await modal.rate_res.findAll({
+                where:{
+                    user_id: userID
+                },
+                attributes :{exclude: ['res_id']},
+                include :[{model: modal.restaurants, as:"re"}]
+            })
+            success(res,`success get rate by user who owned id:${userID} `,currentUserLikedRes)
+        }else{
+            rejected(res,400,"User is not exits", [])
+        }
     } catch {
-        res.status(500).send("BE ERROR 500")
+        serverError(res)
     }
 }
 
