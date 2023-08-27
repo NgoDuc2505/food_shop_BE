@@ -1,0 +1,468 @@
+{
+	"info": {
+		"_postman_id": "2b3c7c45-93cf-4192-9d33-19491f8ec4b9",
+		"name": "food_shop_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28921956"
+	},
+	"item": [
+		{
+			"name": "getAllUser",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5nb2R1YzI2N0BnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTY5MjQ1NTIwNiwiZXhwIjoxNjkyNDU1NTA2fQ.jklQaUmMfy-TT2mOTK7eCbY1PPYzs9w-RJnmOj09tvI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/user/getUser",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"getUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserDetail",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/user/getUserDetail/13",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"getUserDetail",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteUser",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/user/deleteUser/12",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"deleteUser",
+						"12"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"full_name\": \"ngo minh duc\",\r\n    \"email\": \"ngoduc206@gmail.com\",\r\n    \"password\": \"12344556\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/user/createUser",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"createUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUser",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"full_name\": \"duc minh\",\r\n    \"email\": \"ngoduc202@gmail.com\",\r\n    \"password\": \"12344556\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/user/updateUser/13",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"updateUser",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserByName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/user/getUserByName/duc",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"getUserByName",
+						"duc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "uploadFoodimg",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/ngodu/Pictures/Saved Pictures/bg1.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/api/food/uploadFood/5",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"food",
+						"uploadFood",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "resLike",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/res/resLike/3/6",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"res",
+						"resLike",
+						"3",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "resUnlike",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/res/resUnlike/3/6",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"res",
+						"resUnlike",
+						"3",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getLikeByRes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/res/getLikeByRes/4",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"res",
+						"getLikeByRes",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getLikeByUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/res/getLikeByUser/5",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"res",
+						"getLikeByUser",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "resRate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\" : \"6\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/res/resRate/4/3",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"res",
+						"resRate",
+						"4",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getRateByRes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/res/getRateByRes/2",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"res",
+						"getRateByRes",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getRateByUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/res/getRateByUser/5",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"res",
+						"getRateByUser",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getListFoodByPage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/food/getListFoodByPage/8/1",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"food",
+						"getListFoodByPage",
+						"8",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "facebookLogin",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/user/facebookLogin/47346567843",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"user",
+						"facebookLogin",
+						"47346567843"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"ngoduc267@gmail.com\",\r\n    \"password\": \"25052002\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/user/login",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "orderPost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\" : 4,\r\n    \"code\" : \"UTHDJ\",\r\n    \"arr_sub_id\" : \"9,3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/order/orderPost/4/2",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"order",
+						"orderPost",
+						"4",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "localhost:8080/api",
+			"type": "string"
+		}
+	]
+}
